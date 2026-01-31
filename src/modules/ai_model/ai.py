@@ -46,13 +46,22 @@ class Model:
         self.tool_registry[tool_name] = (fn, None)
 
     async def _call_model(self, messages: list, tools):
+        if tools:
+            return await asyncio.wait_for(
+                asyncio.to_thread(
+                    self.client.chat.completions.create,
+                    model=self.model,
+                    messages=messages,
+                    tools=tools,
+                    tool_choice="auto",
+                ),
+                timeout=self.request_timeout,
+            )
         return await asyncio.wait_for(
             asyncio.to_thread(
                 self.client.chat.completions.create,
                 model=self.model,
                 messages=messages,
-                tools=tools,
-                tool_choice="auto" if tools else None,
             ),
             timeout=self.request_timeout,
         )
