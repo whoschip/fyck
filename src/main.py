@@ -1,6 +1,7 @@
 import uvicorn
 from dotenv import load_dotenv
 
+load_dotenv()
 
 # temp like this
 if __name__ == "__main__":
